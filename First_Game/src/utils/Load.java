@@ -22,6 +22,7 @@ public class Load {
 	public static final String Eye_Attack = "Eye_Attack.png";
 	public static final String Eye_Death = "Eye_Death.png";
 	
+	public static final String Game_Over = "Game_Over.png";
 	public static BufferedImage GetSprite(String fileName) {
 		BufferedImage img = null;
 		InputStream is = Load.class.getResourceAsStream("/" + fileName);

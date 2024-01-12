@@ -1,17 +1,19 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import entities.*;
-import levels.LevelManager;
+import utils.Load;
 
 public class Game implements Runnable{
 	private Thread thread;
     private Panel panel;
     private final int setFPS = 120;
     private final int setUPS = 120;
-    private LevelManager levelManager;
     
+    private int replay = 0;
+    private boolean game_over = false;
     private Enemies enemies;
     private Player player;
     
@@ -27,7 +29,6 @@ public class Game implements Runnable{
     	player = new Player(0,496,150,121, enemies);
 		enemies = new Enemies(player);
 		player.setEnemies(enemies);
-		levelManager = new LevelManager(this);
 	}
 
 	private void startGameLoop(){
@@ -36,15 +37,34 @@ public class Game implements Runnable{
     }
 	
     public void update() {
-    	player.update();
     	enemies.update();
-    	levelManager.update();
+    	if(player.isAlive)
+        	player.update();
+    	else {
+    		if(replay <= 50) {
+    			player.update();
+    			replay++;
+    			game_over = true;
+    		}
+    		return;
+    	}
     }
     public void render(Graphics g) {
-    	levelManager.render(g);
+    	renderBackground(g);
     	player.render(g);
     	enemies.render(g);
+    	if(game_over) GameOver(g);
     }
+    private void GameOver(Graphics g) {
+    	BufferedImage img = Load.GetSprite(Load.Game_Over);
+		g.drawImage(img, 100, 0, 500, 300, null);
+	}
+
+	public void renderBackground(Graphics g) {
+    	BufferedImage img = Load.GetSprite(Load.Background);
+		g.drawImage(img, 0, 0, 1170, 630, null);
+    }
+    
 
     @Override
     public void run() {

@@ -33,6 +33,7 @@ public class Player extends Entity{
     
     Enemies enemies;
     private boolean attacked;
+    public boolean isAlive = true;
     
 	public Player(float x, float y, int width, int height, Enemies enemies) {
 		super(x, y, width-110, height - 25);
@@ -82,6 +83,7 @@ public class Player extends Entity{
 		health -= damage;
 		if(health <= 0) {
 			health = 0;
+			isAlive = false;
 		}
 		hurt = true;
 	}
@@ -97,7 +99,7 @@ public class Player extends Entity{
         setAnimation();
 	}
 	private void attacked() {
-		if(attacked || index != 1) return;
+		if(attacked || index != 0) return;
 		for (Mushroom mushroom : enemies.mushrooms) {
             if (attackRange.intersects(mushroom.getHitbox())) {
                 mushroom.hurt(13);
@@ -144,6 +146,7 @@ public class Player extends Entity{
     	if(hurt) {
     		playerAction = HURT;
     	}
+    	if(!isAlive)playerAction = DEAD;
     	
     	if(start != playerAction) {
     		tick = 0;
